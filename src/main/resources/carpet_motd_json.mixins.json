@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "ovh.powenet.carpet_motd_json.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "server": [
+    "ServerMetadata_motdMixin",
+    "World_getBlockEntityMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

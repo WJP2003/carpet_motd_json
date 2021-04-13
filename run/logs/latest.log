@@ -1,0 +1,67 @@
+[00:53:44] [main/INFO] (FabricLoader) Loading for game Minecraft 1.16.5
+[00:53:44] [main/INFO] (Fabric|Loader) [FabricLoader] Loading 5 mods: minecraft@1.16.5, java@11, carpet_motd_json@1.0, carpet@1.4.31, fabricloader@0.11.3
+[00:53:44] [main/WARN] (Fabric|Loader) Runtime mod remapping disabled due to no fabric.remapClasspathFile being specified. You may need to update loom.
+[00:53:45] [main/INFO] (mixin) SpongePowered MIXIN Subsystem Version=0.8.2 Source=file:/C:/Users/qtpowe/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.9.2+mixin.0.8.2/12c437eebf031967eaa7daad861e115932772cc7/sponge-mixin-0.9.2+mixin.0.8.2.jar Service=Knot/Fabric Env=SERVER
+[00:53:45] [main/INFO] (Fabric|MixinBootstrap) Loaded Fabric development mappings for mixin remapper!
+[00:53:45] [main/INFO] (mixin) Remapping refMap fabric-carpet-refmap.json using remapper chain
+[00:53:46] [main/WARN] (mixin) @Mixin target net/minecraft/entity/mob/BlazeEntity$ShootFireballGoal is public in carpet.mixins.json:BlazeEntityShootFireballGoal_extremeMixin and should be specified in value
+[00:53:46] [main/WARN] (mixin) @Mixin target net/minecraft/command/argument/BlockPredicateArgumentType$StatePredicate is public in carpet.mixins.json:StatePredicate_scarpetMixin and should be specified in value
+[00:53:46] [main/WARN] (mixin) @Mixin target net/minecraft/command/argument/BlockPredicateArgumentType$TagPredicate is public in carpet.mixins.json:TagPredicate_scarpetMixin and should be specified in value
+[00:53:46] [main/ERROR] (mixin) carpet_motd_json.mixins.json:World_getBlockEntityMixin: Super class 'net.minecraft.world.World' of World_getBlockEntityMixin was not found in the hierarchy of target class 'net/minecraft/world/World'
+org.spongepowered.asm.mixin.transformer.throwables.InvalidMixinException: Super class 'net.minecraft.world.World' of World_getBlockEntityMixin was not found in the hierarchy of target class 'net/minecraft/world/World'
+	at org.spongepowered.asm.mixin.transformer.MixinInfo$SubType$Standard.validate(MixinInfo.java:590) ~[sponge-mixin-0.9.2+mixin.0.8.2.jar:0.9.2+mixin.0.8.2]
+	at org.spongepowered.asm.mixin.transformer.MixinInfo$State.validate(MixinInfo.java:326) ~[sponge-mixin-0.9.2+mixin.0.8.2.jar:0.9.2+mixin.0.8.2]
+	at org.spongepowered.asm.mixin.transformer.MixinInfo.validate(MixinInfo.java:904) ~[sponge-mixin-0.9.2+mixin.0.8.2.jar:0.9.2+mixin.0.8.2]
+	at org.spongepowered.asm.mixin.transformer.MixinConfig.postInitialise(MixinConfig.java:674) [sponge-mixin-0.9.2+mixin.0.8.2.jar:0.9.2+mixin.0.8.2]
+	at org.spongepowered.asm.mixin.transformer.MixinProcessor.prepareConfigs(MixinProcessor.java:542) [sponge-mixin-0.9.2+mixin.0.8.2.jar:0.9.2+mixin.0.8.2]
+	at org.spongepowered.asm.mixin.transformer.MixinProcessor.select(MixinProcessor.java:439) [sponge-mixin-0.9.2+mixin.0.8.2.jar:0.9.2+mixin.0.8.2]
+	at org.spongepowered.asm.mixin.transformer.MixinProcessor.checkSelect(MixinProcessor.java:415) [sponge-mixin-0.9.2+mixin.0.8.2.jar:0.9.2+mixin.0.8.2]
+	at org.spongepowered.asm.mixin.transformer.MixinProcessor.applyMixins(MixinProcessor.java:285) [sponge-mixin-0.9.2+mixin.0.8.2.jar:0.9.2+mixin.0.8.2]
+	at org.spongepowered.asm.mixin.transformer.MixinTransformer.transformClass(MixinTransformer.java:208) [sponge-mixin-0.9.2+mixin.0.8.2.jar:0.9.2+mixin.0.8.2]
+	at org.spongepowered.asm.mixin.transformer.MixinTransformer.transformClassBytes(MixinTransformer.java:178) [sponge-mixin-0.9.2+mixin.0.8.2.jar:0.9.2+mixin.0.8.2]
+	at org.spongepowered.asm.mixin.transformer.FabricMixinTransformerProxy.transformClassBytes(FabricMixinTransformerProxy.java:23) [fabric-loader-0.11.3@net.fabricmc.yarn.1_16_5.1.16.5+build.6-v2.jar:0.9.2+mixin.0.8.2]
+	at net.fabricmc.loader.launch.knot.KnotClassDelegate.getPostMixinClassByteArray(KnotClassDelegate.java:157) [fabric-loader-0.11.3@net.fabricmc.yarn.1_16_5.1.16.5+build.6-v2.jar:?]
+	at net.fabricmc.loader.launch.knot.KnotClassLoader.loadClass(KnotClassLoader.java:150) [fabric-loader-0.11.3@net.fabricmc.yarn.1_16_5.1.16.5+build.6-v2.jar:?]
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:522) [?:?]
+	at net.fabricmc.loader.game.MinecraftGameProvider.launch(MinecraftGameProvider.java:224) [fabric-loader-0.11.3@net.fabricmc.yarn.1_16_5.1.16.5+build.6-v2.jar:?]
+	at net.fabricmc.loader.launch.knot.Knot.launch(Knot.java:146) [fabric-loader-0.11.3@net.fabricmc.yarn.1_16_5.1.16.5+build.6-v2.jar:?]
+	at net.fabricmc.loader.launch.knot.KnotServer.main(KnotServer.java:28) [fabric-loader-0.11.3@net.fabricmc.yarn.1_16_5.1.16.5+build.6-v2.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) [dev-launch-injector-0.2.1+build.8.jar:?]
+[00:53:52] [main/INFO] (Minecraft) Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[00:53:53] [main/WARN] (Minecraft) Ambiguity between arguments [teleport, destination] and [teleport, targets] with inputs: [Player, 0123, @e, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[00:53:53] [main/WARN] (Minecraft) Ambiguity between arguments [teleport, location] and [teleport, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[00:53:53] [main/WARN] (Minecraft) Ambiguity between arguments [teleport, location] and [teleport, targets] with inputs: [0.1 -0.5 .9, 0 0 0]
+[00:53:53] [main/WARN] (Minecraft) Ambiguity between arguments [teleport, targets] and [teleport, destination] with inputs: [Player, 0123, dd12be42-52a9-4a91-a8a1-11c01849e498]
+[00:53:53] [main/WARN] (Minecraft) Ambiguity between arguments [teleport, targets, location] and [teleport, targets, destination] with inputs: [0.1 -0.5 .9, 0 0 0]
+[00:53:54] [main/INFO] (Minecraft) Reloading ResourceManager: Default
+[00:53:55] [Worker-Main-12/INFO] (Minecraft) Loaded 7 recipes
+[00:53:56] [Worker-Main-12/INFO] (Minecraft) Loaded 927 advancements
+[00:53:58] [Server thread/INFO] (Minecraft) Starting minecraft server version 1.16.5
+[00:53:58] [Server thread/INFO] (Minecraft) Loading properties
+[00:53:58] [Server thread/INFO] (Minecraft) Default game type: SURVIVAL
+[00:53:58] [Server thread/INFO] (Minecraft) Generating keypair
+[00:53:58] [Server thread/INFO] (Minecraft) Starting Minecraft server on *:25565
+[00:53:59] [Server thread/INFO] (Minecraft) Using default channel type
+[00:54:01] [Server thread/INFO] (Minecraft) Preparing level "world"
+[00:54:01] [Server thread/INFO] (carpet) [CM]: loaded setting customMOTD as {"nbt":"x","block":"183 67 -122","interpret":"false"} from carpet.conf
+[00:54:01] [Server thread/INFO] (Minecraft) Preparing start region for dimension minecraft:overworld
+[00:54:03] [Server thread/INFO] (Minecraft) Preparing spawn area: 0%
+[00:54:03] [Server thread/INFO] (Minecraft) Preparing spawn area: 0%
+[00:54:03] [Server thread/INFO] (Minecraft) Preparing spawn area: 0%
+[00:54:03] [Server thread/INFO] (Minecraft) Preparing spawn area: 0%
+[00:54:03] [Server thread/INFO] (Minecraft) Preparing spawn area: 0%
+[00:54:08] [Worker-Main-8/INFO] (Minecraft) Preparing spawn area: 83%
+[00:54:08] [Worker-Main-9/INFO] (Minecraft) Preparing spawn area: 83%
+[00:54:08] [Worker-Main-11/INFO] (Minecraft) Preparing spawn area: 83%
+[00:54:08] [Worker-Main-14/INFO] (Minecraft) Preparing spawn area: 83%
+[00:54:08] [Worker-Main-9/INFO] (Minecraft) Preparing spawn area: 83%
+[00:54:08] [Worker-Main-14/INFO] (Minecraft) Preparing spawn area: 83%
+[00:54:08] [Worker-Main-9/INFO] (Minecraft) Preparing spawn area: 83%
+[00:54:08] [Worker-Main-14/INFO] (Minecraft) Preparing spawn area: 83%
+[00:54:08] [Server thread/INFO] (Minecraft) Preparing spawn area: 96%
+[00:54:08] [Worker-Main-8/INFO] (Minecraft) Preparing spawn area: 99%
+[00:54:08] [Server thread/INFO] (Minecraft) Time elapsed: 7171 ms
+[00:54:08] [Server thread/INFO] (Minecraft) Done (7.621s)! For help, type "help"
+[00:56:36] [Server Watchdog/FATAL] (Minecraft) A single server tick took 77.93 seconds (should be max 0.05)
+[01:01:57] [Server Watchdog/FATAL] (Minecraft) Considering it to be crashed, server will forcibly shutdown.
+[01:01:58] [Server thread/INFO] (Minecraft) Stopping server
