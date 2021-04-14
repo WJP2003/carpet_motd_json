@@ -3,7 +3,6 @@ package ovh.powenet.carpet_motd_json;
 import carpet.CarpetExtension;
 import carpet.CarpetServer;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -13,13 +12,13 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 import java.util.stream.StreamSupport;
-import static ovh.powenet.carpet_motd_json.Mod.ChatFormatting.*;
+import static ovh.powenet.carpet_motd_json.Mod.LegacyTextFormatting.*;
 
 public class Mod implements CarpetExtension,ModInitializer,DedicatedServerModInitializer {
         public void onInitialize() { }
         public void onInitializeServer() { }
         private static final Gson gson = new GsonBuilder().setLenient().create();
-        public static Text parse(String raw) {
+        public static LiteralText toLegacyText(String raw) {
                 try {
                         return toLegacyText(resolveTextComponents(gson.fromJson(raw,JsonObject.class)));
                 } catch(JsonSyntaxException jsx) {
@@ -29,26 +28,72 @@ public class Mod implements CarpetExtension,ModInitializer,DedicatedServerModIni
                                 return new LiteralText(raw);
                 }
         }
-        private static LiteralText toLegacyText(JsonObject a) {
+        private static LiteralText toLegacyText(JsonObject a) { return new LiteralText(toLegacyTextParent(a)); }
+        private static String toLegacyTextParent(JsonObject a) {
                 StringBuilder b = new StringBuilder();
+                boolean[] p = {false,false,false,false,false};
+                char r = 'r';
+
+                if(a.has("color")) {
+                        r = Colors.getOrDefault(a.get("color").getAsString(),InvalidColorPlaceholder);
+                        b.append(SpecialCharacter).append(r);
+                }
                 // Yes, this is code duplication. I just hate loops for stuff like this.
-                if(a.has("obfuscated") && a.get("obfuscated").getAsBoolean())
-                        b.append(SpecialCharacter).append(Styles.get("obfuscated"));
-                if(a.has("bold") && a.get("bold").getAsBoolean())
-                        b.append(SpecialCharacter).append(Styles.get("bold"));
-                if(a.has("strikethrough") && a.get("strikethrough").getAsBoolean())
-                        b.append(SpecialCharacter).append(Styles.get("strikethrough"));
-                if(a.has("underline") && a.get("underline").getAsBoolean())
-                        b.append(SpecialCharacter).append(Styles.get("underline"));
-                if(a.has("italics") && a.get("italics").getAsBoolean())
-                        b.append(SpecialCharacter).append(Styles.get("italics"));
-                if(a.has("reset") && a.get("reset").getAsBoolean())
-                        b.append(SpecialCharacter).append(Styles.get("reset"));
-                if(a.has("color"))
-                        b.append(SpecialCharacter).append(Colors.getOrDefault(a.get("color").getAsString(),InvalidColorPlaceholder));
-                return new LiteralText(b.toString());
+                // The lack of "else" is intentional; often text will be both bold and underlined something like that.
+                if(a.has("obfuscated") && a.get("obfuscated").getAsBoolean()) {
+                        b.append(SpecialCharacter).append(Styles.obfuscated);
+                        p[0] = true;
+                }
+                if(a.has("bold") && a.get("bold").getAsBoolean()) {
+                        b.append(SpecialCharacter).append(Styles.bold);
+                        p[1] = true;
+                }
+                if(a.has("strikethrough") && a.get("strikethrough").getAsBoolean()) {
+                        b.append(SpecialCharacter).append(Styles.strikethrough);
+                        p[2] = true;
+                }
+                if(a.has("underlined") && a.get("underlined").getAsBoolean()) {
+                        b.append(SpecialCharacter).append(Styles.underlined);
+                        p[3] = true;
+                }
+                if(a.has("italic") && a.get("italic").getAsBoolean()) {
+                        b.append(SpecialCharacter).append(Styles.italic);
+                        p[4] = true;
+                }
+
+                b.append(a.get("text").getAsString());
+
+                // This recursively handles extra:[{},{}] tags.
+                // The e flag is there so it doesn't handle extra tags inside of other extra tags (intended behavior).
+                if(a.has("extra") && a.get("extra").isJsonArray()) {
+                        final char R = r; // Necessary for lambda. Idk.
+                        StreamSupport.stream(a.remove("extra").getAsJsonArray().spliterator(),false).forEachOrdered(c -> toLegacyTextExtra(c.getAsJsonObject(),p,b,R));
+                }
+
+                return b.toString();
         }
-        private static JsonObject resolveTextComponents(JsonObject a) { return resolveTextComponents(a,false); }
+        private static void toLegacyTextExtra(JsonObject a,boolean[] p,StringBuilder b,char c) {
+                if(a.has("color")) {
+                        b.append(SpecialCharacter).append(Colors.getOrDefault(a.get("color").getAsString(),InvalidColorPlaceholder));
+                } else if(c != 'r') {
+                        b.append(SpecialCharacter).append(c);
+                }
+
+                // Again, code duplication. Just trying to make the code a bit more efficient by unrolling a loop.
+                if(!a.has("obfuscated") && p[0] || a.has("obfuscated") && a.get("obfuscated").getAsBoolean())
+                        b.append(SpecialCharacter).append(Styles.obfuscated);
+                if(!a.has("bold") && p[1] || a.has("bold") && a.get("bold").getAsBoolean())
+                        b.append(SpecialCharacter).append(Styles.bold);
+                if(!a.has("strikethrough") && p[2] || a.has("strikethrough") && a.get("strikethrough").getAsBoolean())
+                        b.append(SpecialCharacter).append(Styles.strikethrough);
+                if(!a.has("underlined") && p[3] || a.has("underlined") && a.get("underlined").getAsBoolean())
+                        b.append(SpecialCharacter).append(Styles.underlined);
+                if(!a.has("italic") && p[4] || a.has("italic") && a.get("italic").getAsBoolean())
+                        b.append(SpecialCharacter).append(Styles.italic);
+                
+                b.append(a.get("text").getAsString());
+        }
+        private static JsonObject resolveTextComponents(JsonObject a) { return resolveTextComponents(a,true); }
         private static JsonObject resolveTextComponents(JsonObject a, boolean e) {
                 MutableText b;
                 // This if-else chain tests for each type of dynamic text type
@@ -83,10 +128,8 @@ public class Mod implements CarpetExtension,ModInitializer,DedicatedServerModIni
 
                 // This recursively handles extra:[{},{}] tags.
                 // The e flag is there so it doesn't handle extra tags inside of other extra tags (intended behavior).
-                if(!e && a.has("extra") && a.get("extra").isJsonArray()) {
-                        a.add("extra",gson.toJsonTree(Lists.newArrayList(a.remove("extra").getAsJsonArray().iterator()).stream().map(c -> {
-                                return resolveTextComponents(c.getAsJsonObject(),true);
-                        }).toArray()).getAsJsonArray());
+                if(e && a.has("extra") && a.get("extra").isJsonArray()) {
+                        a.add("extra",gson.toJsonTree(StreamSupport.stream(a.remove("extra").getAsJsonArray().spliterator(),false).map(c -> resolveTextComponents(c.getAsJsonObject(),false)).toArray()).getAsJsonArray());
                 }
 
                 try {
@@ -96,10 +139,10 @@ public class Mod implements CarpetExtension,ModInitializer,DedicatedServerModIni
                 }
                 return a;
         }
-        public static class ChatFormatting {
+        @SuppressWarnings("unused")  // I _am_ using this class! Shut up IntelliJ!
+        public static final class LegacyTextFormatting {
                 public static final char SpecialCharacter = '§'; // U+00A7
-                public static final char InvalidColorPlaceholder = '8'; // dark_gray
-                public static final char InvalidStylePlaceholder = 'r'; // reset
+                public static final char InvalidColorPlaceholder = 'r'; // reset
                 public static final ImmutableMap<String,Character> Colors = new ImmutableMap.Builder<String,Character>()
                         .put("black",'0')
                         .put("dark_blue",'1')
@@ -116,13 +159,17 @@ public class Mod implements CarpetExtension,ModInitializer,DedicatedServerModIni
                         .put("red",'c')
                         .put("light_purple",'d')
                         .put("yellow",'e')
-                        .put("white",'f').build();
-                public static final ImmutableMap<String,Character> Styles = new ImmutableMap.Builder<String,Character>()
-                        .put("obfuscated",'k')
-                        .put("bold",'l')
-                        .put("strikethrough",'m')
-                        .put("underline",'n')
-                        .put("italics",'o')
+                        .put("white",'f')
                         .put("reset",'r').build();
+                public static final class Styles {
+                        public static final char
+                                obfuscated = 'k',
+                                bold = 'l',
+                                strikethrough = 'm',
+                                underlined = 'n',
+                                italic = 'o';
+                        private Styles() {} // can't be instantiated, intended
+                }
+                private LegacyTextFormatting() {}
         }
 }

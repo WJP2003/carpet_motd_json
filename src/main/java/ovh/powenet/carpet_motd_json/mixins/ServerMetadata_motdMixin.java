@@ -15,7 +15,7 @@ public abstract class ServerMetadata_motdMixin {
     @Shadow private Text description;
     @Inject(method = "getDescription", at = @At("HEAD"), cancellable = true)
     private void getDescriptionAlternative(CallbackInfoReturnable<Text> cir) {
-        cir.setReturnValue(Mod.parse(CarpetSettings.customMOTD.equals("_") ? this.description.asString() : CarpetSettings.customMOTD));
+        cir.setReturnValue(Mod.toLegacyText(CarpetSettings.customMOTD.equals("_") ? this.description.asString() : CarpetSettings.customMOTD));
         cir.cancel();
     }
 }
