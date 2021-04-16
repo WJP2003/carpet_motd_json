@@ -20,9 +20,9 @@ public class Mod implements CarpetExtension, ModInitializer, DedicatedServerModI
 
 	private static final Gson gson = new GsonBuilder().setLenient().create();
 
-	public static LiteralText toLegacyText(final String raw,boolean[] f) {
+	public static LiteralText toLegacyText(final String raw) {
 		try {
-			return toLegacyText(resolveTextComponents(gson.fromJson(raw,JsonObject.class),f));
+			return toLegacyText(resolveTextComponents(gson.fromJson(raw,JsonObject.class)));
 		} catch(JsonSyntaxException jsx) {
 			if(raw.startsWith("{")) // Checking if it was actually intended to be parsed, or just plaintext
 				return new LiteralText(jsx.toString());
@@ -107,9 +107,9 @@ public class Mod implements CarpetExtension, ModInitializer, DedicatedServerModI
 		b.append(a.get("text").getAsString());
 	}
 
-	private static JsonObject resolveTextComponents(JsonObject a,boolean[] f) { return resolveTextComponents(a,true,f); }
+	private static JsonObject resolveTextComponents(JsonObject a) { return resolveTextComponents(a,true); }
 
-	private static JsonObject resolveTextComponents(JsonObject a,final boolean e,boolean[] f) {
+	private static JsonObject resolveTextComponents(JsonObject a,final boolean e) {
 		MutableText b;
 		// This if-else chain tests for each type of dynamic text type
 		// (except keybinds, since, well, the server doesn't have keybinds)
@@ -120,13 +120,11 @@ public class Mod implements CarpetExtension, ModInitializer, DedicatedServerModI
 		} else if(a.has("translate")) {
 			// This line is quite long because it needs to take into account the "with" json array that comes with TranslatableText.
 			// Luckily this isn't that hard, since the JsonArray has an iterator that can
-			b = new TranslatableText(a.remove("translate").getAsString(),a.has("with") && a.get("with").isJsonArray() ? StreamSupport.stream(a.remove("with").getAsJsonArray().spliterator(),false).map(c -> resolveTextComponents(c.getAsJsonObject(),f)).toArray() : null);
+			b = new TranslatableText(a.remove("translate").getAsString(),a.has("with") && a.get("with").isJsonArray() ? StreamSupport.stream(a.remove("with").getAsJsonArray().spliterator(),false).map(c -> resolveTextComponents(c.getAsJsonObject())).toArray() : null);
 		} else if(a.has("score")) {
 			b = new ScoreText(a.get("score").getAsJsonObject().get("name").getAsString(),a.remove("score").getAsJsonObject().get("objective").getAsString());
-			f[0] = true;
 		} else if(a.has("selector")) {
 			b = new SelectorText(a.remove("selector").getAsString());
-			f[0] = true;
 		} else if(a.has("nbt")) {
 			// Block NBT doesn't work because of a weird line in the World.getBlockEntity(pos)
 			// method that checks if the current thread is the server main thread (which in this
@@ -141,7 +139,6 @@ public class Mod implements CarpetExtension, ModInitializer, DedicatedServerModI
 				b = new NbtText.StorageNbtText(a.remove("nbt").toString(),a.has("interpret") && a.remove("interpret").getAsBoolean(),new Identifier(a.remove("storage").getAsString()));
 			else
 				throw new JsonSyntaxException("Invalid nbt tag (Note: block tag not supported)");
-			f[0] = true;
 		} else {
 			throw new JsonSyntaxException("Invalid text component (No text, translate, score, selector, or nbt tag found)");
 		}
@@ -155,7 +152,7 @@ public class Mod implements CarpetExtension, ModInitializer, DedicatedServerModI
 					gson.toJsonTree(
 						StreamSupport.stream(
 							q.getAsJsonArray().spliterator(),false
-						).map(c -> resolveTextComponents(c.getAsJsonObject(),false,f)
+						).map(c -> resolveTextComponents(c.getAsJsonObject(),false)
 						).toArray()
 					).getAsJsonArray()
 				);
