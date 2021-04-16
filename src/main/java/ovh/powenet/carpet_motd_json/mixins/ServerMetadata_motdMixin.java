@@ -1,7 +1,6 @@
 package ovh.powenet.carpet_motd_json.mixins;
 
 import carpet.CarpetSettings;
-import net.minecraft.text.LiteralText;
 import ovh.powenet.carpet_motd_json.Mod;
 import net.minecraft.server.ServerMetadata;
 import net.minecraft.text.Text;
