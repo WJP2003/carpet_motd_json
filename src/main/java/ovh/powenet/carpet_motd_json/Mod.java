@@ -169,17 +169,15 @@ public class Mod implements CarpetExtension, ModInitializer, DedicatedServerModI
 		return a;
 	}
 
-	@SuppressWarnings("unused")  // I _am_ using this class! Shut up IntelliJ!
-	public static final class LegacyTextFormatting {
+	@SuppressWarnings("unused")  // I _am_ using this enum! Shut up IntelliJ!
+	public enum LegacyTextFormatting {;
 		public static final char SpecialCharacter = '§'; // U+00A7
 		public static final char InvalidColorPlaceholder = 'r'; // reset
 		public static final Object2CharOpenHashMap<String> Colors = new Object2CharOpenHashMap<>(
 			new String[]{"black","dark_blue","dark_green","dark_aqua","dark_red","dark_purple","gold","gray","dark_gray","blue","green","aqua","red","light_purple","yellow","white","reset"},
 			new char[]{'0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f','r'});
-		public static final class Styles {
+		public enum Styles {;
 			public static final char obfuscated = 'k',bold = 'l',strikethrough = 'm',underlined = 'n',italic = 'o';
-			private Styles() { } // can't be instantiated, intended
 		}
-		private LegacyTextFormatting() { }
 	}
 }
